@@ -16,6 +16,8 @@ void quickSort(int*, int, int); // быстрая сортировка
 void quickSort_Remastered(int*, int, int); // быстрая сортировка ++
 int split(int*, int, int); // разделить (быстрая сортировка)
 void countSort(int*, int, int); // сортировка подсчетом
+void digitSort(int*, int); // цифровая сортировка
+int getMax(int*, int); // функция по поиску максимального элемента в массиве
 void randArr(int*, int, int); // Заполнение массива случайными элементами
 void printArr(int*, int); // Печать массива
 void swap(int& a, int& b); // Обмена элементов массива
@@ -56,6 +58,12 @@ int main()
 	randArr(a, n, k);
 	countSort(a, n, k);
 	cout << "Count sort\n";
+	printArr(a, n);
+
+	// цифровая сортировка
+	randArr(a, n, k);
+	digitSort(a, n);
+	cout << "Digit sort\n";
 	printArr(a, n);
 }
 
@@ -214,6 +222,50 @@ void countSort(int* a, int n, int k)
     
 	free(temp);
 	free(C);
+}
+
+// Цифровая сортировка
+void digitSort(int* a, int n)
+{
+	int max = getMax(a, n); // максимальный элемент
+	int* temp = (int*)malloc(sizeof(int) * n); // временный массив
+
+	// для каждого разряда чисел
+	for (int e = 1; max / e > 0; e *= 10)
+	{
+		int digits[10] = {0};  // массив для подсчета кол-во цифр
+
+		// подсчитываем количество чисел по каждому разряду
+		for (int i = 0; i < n; i++)
+			digits[(a[i] / e) % 10]++;
+        
+		// вычисляем положение чисел в итоговом массиве
+		for (int i = 1; i < 10; i++)
+			digits[i] += digits[i-1];
+
+		// распределяем числа в итоговый массив
+		for (int i = n - 1; i >= 0; i--)
+		{
+			temp[digits[(a[i] / e) % 10] - 1] = a[i];
+			digits[(a[i] / e) % 10]--;
+		}
+
+		// копируем отсортированный массив в исходный
+		for (int i = 0; i < n; i++)
+			a[i] = temp[i];
+	}
+
+	free(temp);
+}
+
+// Функция по поиску максимального элемента в массиве
+int getMax(int* a, int n)
+{
+	int max = a[0];
+	for (int i = 1; i < n; i++)
+		if (a[i] > max)
+			max = a[i];
+	return max;
 }
 
 // Заполнение массива случайными элементами
