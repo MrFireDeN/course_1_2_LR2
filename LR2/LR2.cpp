@@ -27,8 +27,8 @@ int main()
 	//сортировка слияянием
 	cout << "Original Data\n";
 	randArr(a, n, 100);
-	mergeSort(a, n);
 	printArr(a, n);
+	mergeSort(a, n);
 	cout << "Merge sort\n";
 	printArr(a, n);
 	
@@ -142,7 +142,7 @@ void quickSort(int* a, int left, int right)
 	int m = split(a, left, right);
 
 	quickSort(a, left, m - 1);
-	quickSort(a, m, right);
+	quickSort(a, m + 1, right);
 }
 
 // Разделение массива по элементу
@@ -157,7 +157,7 @@ int split(int* a, int left, int right)
 			swap(a[i], a[++j]);
 	}
 	
-	swap(a[++j], x);
+	swap(a[++j], a[right]);
 	return j;
 }
 
