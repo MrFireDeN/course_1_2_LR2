@@ -15,6 +15,7 @@ void mergeSort_Remastered(int*, int); // сортировка слияние ++
 void quickSort(int*, int, int); // быстрая сортировка
 void quickSort_Remastered(int*, int, int); // быстрая сортировка ++
 int split(int*, int, int); // разделить (быстрая сортировка)
+void countSort(int*, int, int); // сортировка подсчетом
 void randArr(int*, int, int); // Заполнение массива случайными элементами
 void printArr(int*, int); // Печать массива
 void swap(int& a, int& b); // Обмена элементов массива
@@ -23,34 +24,39 @@ int main()
 {
 	const int n = 10;
 	int a[n] = {0};
+	int k = 100;
 
 	//сортировка слияянием
 	cout << "Original Data\n";
-	randArr(a, n, 100);
+	randArr(a, n, k);
 	printArr(a, n);
 	mergeSort(a, n);
 	cout << "Merge sort\n";
 	printArr(a, n);
 	
 	//сортировка слиянием ++
-	randArr(a, n, 100);
+	randArr(a, n, k);
 	mergeSort_Remastered(a, n);
 	cout << "Merge sort Remastered\n";
 	printArr(a, n);
 
 	//быстрая сортировка
-	randArr(a, n, 100);
+	randArr(a, n, k);
 	quickSort(a, 0, n - 1);
 	cout << "Quick sort\n";
 	printArr(a, n);
 
 	//быстрая сортировка ++
-	randArr(a, n, 100);
+	randArr(a, n, k);
 	quickSort_Remastered(a, 0, n - 1);
 	cout << "Quick sort Remastered\n";
 	printArr(a, n);
 
-	
+	// сортировка подсчетом
+	randArr(a, n, k);
+	countSort(a, n, k);
+	cout << "Count sort\n";
+	printArr(a, n);
 }
 
 // Слияние отсортированных массивов
@@ -181,6 +187,33 @@ void quickSort_Remastered(int* a, int left, int right)
 	//если левый индекс меньше правой границы, то сортируем от левого индкса до правой границы
 	if (i < right)
 		quickSort_Remastered(a, i+1, right);
+}
+
+// Сортировка подсчетом
+void countSort(int* a, int n, int k)
+{
+	int* temp = (int*)malloc(sizeof(int) * n);
+	int* C = (int*)malloc(sizeof(int) * n);
+    
+	for (int i = 0; i < k; i++)
+		C[i] = 0;
+	for (int i = 0; i < n; i++)
+		temp[i] = 0;
+	for (int i = 1; i < n; i++)
+		C[a[i]]++;
+	for (int i = 1; i < k; i++)
+		C[i] += C[i-1];
+	for (int i = n - 1; i >= 0; i--)
+	{
+		temp[C[a[i]]] = a[i];
+		C[a[i]]--;
+	}
+
+	for (int i = 0; i < n; i++)
+		a[i] = temp[i];
+    
+	free(temp);
+	free(C);
 }
 
 // Заполнение массива случайными элементами
